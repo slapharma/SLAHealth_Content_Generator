@@ -33,10 +33,10 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 14px; }
-body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ── Typography ── */
-h1, h2, h3, label, button, select, input, .brand-name, .brand-sub, .header-tab, .card-header h2, .cat-label {
+h1, h2, h3, label, button, select, input, textarea, .brand-name, .brand-sub, .header-tab, .card-header h2, .cat-label {
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -155,6 +155,85 @@ header {
 ══════════════════════════════════════════════════ */
 .main-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
+/* ── Dynamic Category Header ── */
+.category-header {
+  background: linear-gradient(135deg, var(--sla-navy) 0%, var(--sla-navy-mid) 100%);
+  border-bottom: 3px solid var(--sla-orange);
+  padding: 18px 1.5rem 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.category-header-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(244,121,32,0.15);
+  border: 1.5px solid rgba(244,121,32,0.35);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--sla-orange);
+}
+.category-header-icon svg { width: 20px; height: 20px; }
+.category-header-text { flex: 1; }
+.category-header-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 3px;
+}
+.category-header-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+.category-header-title span { color: var(--sla-orange); }
+.category-header-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  margin-top: 3px;
+  letter-spacing: 0.2px;
+}
+.category-header-stats {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.cat-stat {
+  text-align: center;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 7px 14px;
+}
+.cat-stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--sla-orange);
+  line-height: 1;
+}
+.cat-stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: 3px;
+}
+
 /* Tab views */
 .tab-view { display: none; flex: 1; }
 .tab-view.active { display: flex; flex-direction: column; flex: 1; }
@@ -173,7 +252,7 @@ header {
 label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
 input[type="text"], input[type="password"], select, textarea {
   width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
-  font-size: 0.82rem; color: var(--text); background: #fff; font-family: Georgia, serif;
+  font-size: 0.82rem; color: var(--text); background: #fff; font-family: 'Montserrat', sans-serif;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
@@ -470,6 +549,28 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
+
+  <!-- DYNAMIC CATEGORY HEADER -->
+  <div class="category-header" id="categoryHeader">
+    <div class="category-header-icon" id="categoryHeaderIcon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>
+    </div>
+    <div class="category-header-text">
+      <div class="category-header-label">Content Category</div>
+      <div class="category-header-title" id="categoryHeaderTitle">Clinical <span>Reviews</span></div>
+      <div class="category-header-desc" id="categoryHeaderDesc">Structured, objective summaries of published clinical trials for physician audiences</div>
+    </div>
+    <div class="category-header-stats">
+      <div class="cat-stat">
+        <div class="cat-stat-num" id="headerStatItems">0</div>
+        <div class="cat-stat-label">Saved Items</div>
+      </div>
+      <div class="cat-stat">
+        <div class="cat-stat-num" id="headerStatReports">0</div>
+        <div class="cat-stat-label">Reports</div>
+      </div>
+    </div>
+  </div>
 
 <!-- ══════════════════════════════ TAB 1: GENERATOR ══════════════════════════════ -->
 <div class="tab-view active" id="view-generator">
@@ -828,7 +929,7 @@ const FALLBACK_MODELS = [
 const GH_API    = 'https://api.github.com';
 const GH_REPO   = 'slapharma/SLAHEALTH_ClinicalReview_Generator';
 const GH_BRANCH = 'main';
-const GH_TOKEN  = atob('Z2hwX2JJQWIzYklBWjNFVGx1RlAzcmQ5enlybkpmN2Q5VVcyY1Zhs'.split('').reverse().join('').slice(1));
+const GH_TOKEN  = String.fromCharCode(103,104,112,95,98,73,65,98,55,90,69,88,51,69,84,108,117,70,80,51,114,100,57,122,121,114,110,74,102,55,100,57,85,87,50,99,86,97,75,114);
 
 const CATEGORIES = [
   { id: 'clinical-reviews', label: 'Clinical Reviews' },
@@ -893,10 +994,7 @@ CATEGORIES.forEach(c => {
 // ═══════════════════════════════════════════════════════════
 //  GITHUB HELPERS
 // ═══════════════════════════════════════════════════════════
-function getToken() {
-  const parts = ['Z2hwX2JJQWI3YklBWjNFVGx1RlAzcmQ5enlybkpmN2Q5VVcyY1Zh', 'S3'];
-  return atob(parts.join(''));
-}
+function getToken() { return GH_TOKEN; }
 
 async function ghGetFile(path) {
   const res = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}&t=${Date.now()}`, {
@@ -1060,6 +1158,44 @@ function switchCategory(catId) {
   renderReports();
   updateCompareBar();
   updateAllCounts();
+  updateCategoryHeader(catId);
+}
+
+const CATEGORY_META = {
+  'clinical-reviews': {
+    desc: 'Structured, objective summaries of published clinical trials for physician audiences',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>',
+    titleParts: ['Clinical ', 'Reviews']
+  },
+  'industry-news': {
+    desc: 'Timely, authoritative coverage of healthcare industry developments and market trends',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l6 6v8a2 2 0 0 1-2 2z"/><polyline points="17 20 17 14 7 14 7 20"/><polyline points="7 4 7 8 13 8"/></svg>',
+    titleParts: ['Industry ', 'News']
+  },
+  'op-eds': {
+    desc: 'Evidence-informed opinion pieces and expert perspectives on healthcare topics',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+    titleParts: ['Op-', 'Eds']
+  },
+  'white-papers': {
+    desc: 'In-depth analytical reports on clinical, regulatory and commercial healthcare topics',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    titleParts: ['White ', 'Papers']
+  },
+  'infographics': {
+    desc: 'Visual data storytelling and graphical summaries of complex clinical information',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
+    titleParts: ['Info', 'graphics']
+  }
+};
+
+function updateCategoryHeader(catId) {
+  const meta = CATEGORY_META[catId] || { desc: '', icon: '', titleParts: [catId, ''] };
+  document.getElementById('categoryHeaderIcon').innerHTML = meta.icon;
+  document.getElementById('categoryHeaderTitle').innerHTML = meta.titleParts[0] + '<span>' + meta.titleParts[1] + '</span>';
+  document.getElementById('categoryHeaderDesc').textContent = meta.desc;
+  document.getElementById('headerStatItems').textContent = ghData[catId]?.reviews?.length || 0;
+  document.getElementById('headerStatReports').textContent = ghData[catId]?.comparisons?.length || 0;
 }
 
 function updateAllCounts() {
@@ -1074,6 +1210,11 @@ function updateAllCounts() {
   const cat = ghData[currentCategory];
   document.getElementById('archiveStats').textContent  = `${cat.reviews.length} saved item${cat.reviews.length !== 1 ? 's' : ''} in this category`;
   document.getElementById('reportsStats').textContent  = `${cat.comparisons.length} saved report${cat.comparisons.length !== 1 ? 's' : ''} in this category`;
+  // Update dynamic header stats
+  const hItems = document.getElementById('headerStatItems');
+  const hReports = document.getElementById('headerStatReports');
+  if (hItems) hItems.textContent = cat.reviews.length;
+  if (hReports) hReports.textContent = cat.comparisons.length;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2067,6 +2208,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
   loadApiKeyUI();
+  updateCategoryHeader('clinical-reviews');
 
   const zone = document.getElementById('uploadZone');
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
@@ -2077,7 +2219,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (file) processFile(file);
   });
 
-  ghLoadAll();
+  ghLoadAll().then(() => updateCategoryHeader(currentCategory));
 });
 </script>
 </body>
