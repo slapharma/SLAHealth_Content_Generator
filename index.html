@@ -1061,7 +1061,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 </div>
 
 <!-- SEND FOR REVIEW MODAL -->
-<div class="modal-overlay" id="reviewModal" onclick="closeReviewModal(event)">
+<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
   <div class="modal-box">
     <div class="modal-header">
       <h3>
@@ -2546,8 +2546,7 @@ function openSendForReviewModalFromArchive(id) {
   document.getElementById('reviewModal').classList.add('open');
 }
 
-function closeReviewModal(event) {
-  if (event && event.target !== document.getElementById('reviewModal')) return;
+function closeReviewModal() {
   document.getElementById('reviewModal').classList.remove('open');
   currentReviewForModal = null;
 }
@@ -2563,7 +2562,7 @@ function sendForReview() {
   const title   = currentReviewForModal.title || 'Article';
   const catLabel = CATEGORIES.find(c => c.id === currentCategory)?.label || 'Content';
   const itemId  = currentReviewForModal.id || 'current';
-  const repoUrl = `https://github.com/slapharma/SLAHEALTH_ClinicalReview_Generator`;
+  const repoUrl = `https://clinicalreviewgenerator.netlify.app/`;
 
   // Build a mailto link — the reviewer gets a link to the GitHub repo and the article title
   const greeting = name ? `Dear ${name},\n\n` : '';
@@ -2572,15 +2571,22 @@ function sendForReview() {
     `${greeting}You have been asked to review the following ${catLabel} article from SLA Health Content Generator:${customMsg}` +
     `Article: ${title}\n` +
     `Category: ${catLabel}\n` +
-    (itemId !== 'current' ? `Item ID: ${itemId}\n` : '') +
-    `\nPlease access the SLA Health Content Generator to view and review this article:\n${repoUrl}\n\n` +
+    `\n--- ARTICLE CONTENT ---\n\n` +
+    (currentReviewForModal.text ? currentReviewForModal.text.slice(0, 3000) + (currentReviewForModal.text.length > 3000 ? '\n\n[Article truncated — view full version in the app]' : '') : '[Content not available]') +
+    `\n\n--- END OF ARTICLE ---\n\n` +
+    `View and manage this article in the SLA Health Content Generator:\n${repoUrl}\n\n` +
     `This is an automated message from SLA Health Content Generator.`
   );
   const subject = encodeURIComponent(`[SLA Health] Review Request: ${title.slice(0, 60)}`);
   const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
-  // Open the mailto link
-  window.location.href = mailtoLink;
+  // Open the mailto link without navigating away from the app
+  const a = document.createElement('a');
+  a.href = mailtoLink;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 
   showAlert('reviewModalAlert', `\u2713 Review email prepared for ${email}`, 'success');
   setTimeout(() => {
