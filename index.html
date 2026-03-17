@@ -1935,19 +1935,30 @@ function switchTab(tab) {
 // ═══════════════════════════════════════════════════════════
 //  API KEY MANAGEMENT
 // ═══════════════════════════════════════════════════════════
-function getApiKey() { return localStorage.getItem('sla_openrouter_key') || ''; }
+const DEFAULT_API_KEY = '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';
+
+function getApiKey() { return localStorage.getItem('sla_openrouter_key') || DEFAULT_API_KEY; }
+
+function clearApiKey() {
+  localStorage.removeItem('sla_openrouter_key');
+  loadApiKeyUI();
+}
 
 function loadApiKeyUI() {
-  const key = getApiKey();
+  const key = localStorage.getItem('sla_openrouter_key');
   const input = document.getElementById('apiKeyInput');
   const status = document.getElementById('apiKeyStatus');
   if (key) {
+    // User has saved a custom key
     input.value = key;
-    status.innerHTML = '<span style="color:#27ae60;">&#10003; Key saved</span>';
+    status.innerHTML = '<span style="color:#27ae60;">&#10003; Custom key saved</span>';
     document.getElementById('apiKeyCard').style.borderColor = 'rgba(39,174,96,0.3)';
   } else {
-    status.innerHTML = '<span style="color:#e74c3c;">&#9888; Key required</span>';
-    document.getElementById('apiKeyCard').style.borderColor = 'rgba(231,76,60,0.4)';
+    // Using the built-in default key
+    input.value = '';
+    input.placeholder = 'Using built-in key — enter a new one to override';
+    status.innerHTML = '<span style="color:#27ae60;">&#10003; Using built-in key</span>';
+    document.getElementById('apiKeyCard').style.borderColor = 'rgba(39,174,96,0.3)';
   }
   updateGenerateButton();
 }
@@ -2061,12 +2072,12 @@ function updateGenerateButton() {
   } else {
     hasSource = !!extractedText.trim();
   }
-  document.getElementById('generateBtn').disabled = !hasSource || isGenerating || !getApiKey();
+  document.getElementById('generateBtn').disabled = !hasSource || isGenerating; // key always available via default
 }
 
 async function generateReview() {
   if (isGenerating) return;
-  if (!getApiKey()) { showAlert('generateAlert', 'Please enter and save your OpenRouter API key first.', 'error'); document.getElementById('apiKeyInput').focus(); return; }
+  // getApiKey() always returns at least the built-in default key
 
   // Build the source text based on category
   let sourceText = extractedText;
@@ -2185,6 +2196,10 @@ async function attemptGeneration(model, systemPrompt, sourceText) {
   if (!response.ok) {
     let errMsg = `HTTP ${response.status}`;
     try { const errData = await response.json(); errMsg = errData?.error?.metadata?.raw || errData?.error?.message || errMsg; } catch (_) {}
+    if (response.status === 401 || response.status === 403) {
+      clearApiKey();
+      throw new Error('API key invalid or expired — please enter a new OpenRouter key in the API Key settings panel.');
+    }
     throw new Error(errMsg);
   }
   const reader = response.body.getReader();
