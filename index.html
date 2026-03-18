@@ -1042,6 +1042,23 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   .dash-categories { grid-template-columns: repeat(2, 1fr); }
   .calendar-day { min-height: 60px; }
 }
+
+/* ══════════════════════════════════════════════════
+   CATEGORY BAR (replaces sidebar)
+══════════════════════════════════════════════════ */
+.cat-bar {
+  display: flex; gap: 6px; padding: 10px 1.5rem; flex-wrap: wrap;
+  background: var(--card); border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.cat-bar-btn {
+  padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted); font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.cat-bar-btn:hover { background: rgba(30,45,64,0.06); color: var(--text); border-color: var(--sla-navy-lt); }
+.cat-bar-btn.active { background: var(--sla-navy); color: #fff; border-color: var(--sla-navy); }
 </style>
 </head>
 <body>
@@ -1055,8 +1072,8 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   <div class="header-right">
     <div class="header-tabs">
       <button class="header-tab active" onclick="switchTab('dashboard')" id="tab-dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="13" y="3" width="8" height="7" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="14" y="13" width="7" height="8" rx="1"/></svg>
-        Dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+        Home
       </button>
       <button class="header-tab" onclick="switchTab('generator')" id="tab-generator">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -1064,15 +1081,15 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       </button>
       <button class="header-tab" onclick="switchTab('archive')" id="tab-archive">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        Storage <span id="archiveTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+        Storage
       </button>
       <button class="header-tab" onclick="switchTab('reports')" id="tab-reports">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Reports <span id="reportsTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+        Reports
       </button>
       <button class="header-tab" onclick="switchTab('pipeline')" id="tab-pipeline">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="13" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
-        Pipeline <span id="pipelineTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+        Pipeline
       </button>
       <button class="header-tab" onclick="switchTab('calendar')" id="tab-calendar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1096,36 +1113,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ APP LAYOUT ══════════════════════════════ -->
 <div class="app-layout">
-
-  <!-- CATEGORY SIDEBAR -->
-  <nav class="cat-sidebar">
-    <div class="cat-sidebar-title">Categories</div>
-    <button class="cat-btn active" onclick="switchCategory('clinical-reviews')" id="cat-clinical-reviews">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-      Clinical Reviews
-      <span class="cat-count" id="count-clinical-reviews">0</span>
-    </button>
-    <button class="cat-btn" onclick="switchCategory('industry-news')" id="cat-industry-news">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>
-      Industry News
-      <span class="cat-count" id="count-industry-news">0</span>
-    </button>
-    <button class="cat-btn" onclick="switchCategory('op-eds')" id="cat-op-eds">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      Op-Eds
-      <span class="cat-count" id="count-op-eds">0</span>
-    </button>
-    <button class="cat-btn" onclick="switchCategory('white-papers')" id="cat-white-papers">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-      White Papers
-      <span class="cat-count" id="count-white-papers">0</span>
-    </button>
-    <button class="cat-btn" onclick="switchCategory('infographics')" id="cat-infographics">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      Infographics
-      <span class="cat-count" id="count-infographics">0</span>
-    </button>
-  </nav>
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
@@ -1154,6 +1141,13 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ TAB 1: GENERATOR ══════════════════════════════ -->
 <div class="tab-view" id="view-generator">
+<div class="cat-bar" id="catBar-generator">
+  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
+  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
+  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
+  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+</div>
 <div class="app-container">
 
   <!-- LEFT PANEL -->
@@ -1603,6 +1597,13 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ TAB 2: STORAGE ══════════════════════════════ -->
 <div class="tab-view" id="view-archive">
+<div class="cat-bar" id="catBar-archive">
+  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
+  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
+  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
+  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+</div>
   <div class="archive-container">
     <div class="archive-header-row">
       <div>
@@ -1705,6 +1706,13 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ TAB 4: REPORTS ══════════════════════════════ -->
 <div class="tab-view" id="view-reports">
+<div class="cat-bar" id="catBar-reports">
+  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
+  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
+  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
+  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+</div>
   <div class="reports-container">
     <div class="archive-header-row">
       <div>
@@ -2227,9 +2235,9 @@ function switchCategory(catId) {
   selectedArchiveIds.clear();
   activePromptId = null;
 
-  // Update sidebar buttons
-  CATEGORIES.forEach(c => {
-    document.getElementById('cat-' + c.id).classList.toggle('active', c.id === catId);
+  // Update all category bar buttons
+  document.querySelectorAll('.cat-bar-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === catId);
   });
 
   // Update headings
@@ -2343,8 +2351,7 @@ function updateAllCounts() {
   });
   const totalArchive = CATEGORIES.reduce((s,c) => s + ghData[c.id].reviews.length, 0);
   const totalReports = CATEGORIES.reduce((s,c) => s + ghData[c.id].comparisons.length, 0);
-  document.getElementById('archiveTabCount').textContent  = totalArchive  || '';
-  document.getElementById('reportsTabCount').textContent  = totalReports  || '';
+  // tab count spans removed
   const cat = ghData[currentCategory];
   document.getElementById('archiveStats').textContent  = `${cat.reviews.length} saved item${cat.reviews.length !== 1 ? 's' : ''} in this category`;
   document.getElementById('reportsStats').textContent  = `${cat.comparisons.length} saved report${cat.comparisons.length !== 1 ? 's' : ''} in this category`;
@@ -3995,12 +4002,12 @@ function loadDashboard() {
 
 function loadArchiveItemFromDash(id, catId) {
   // Switch to the correct category and load the item
-  selectCategory(catId);
+  switchCategory(catId);
   switchTab('archive');
 }
 
 function startGeneratorForCategory(catId) {
-  selectCategory(catId);
+  switchCategory(catId);
   switchTab('generator');
 }
 
@@ -4135,9 +4142,6 @@ async function loadPipeline() {
   const total = items.length;
   document.getElementById('pipelineSubtitle').textContent =
     `${total} article${total !== 1 ? 's' : ''} across all stages`;
-  const badge = document.getElementById('pipelineTabCount');
-  if (badge) badge.textContent = total || '';
-
   board.innerHTML = STATUS_COLS.map(col => `
     <div class="pipeline-col">
       <div class="pipeline-col-header ${col.cls}">
