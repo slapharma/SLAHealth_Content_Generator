@@ -34,7 +34,16 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: err.message });
       }
     }
-    const updated = { ...item, ...updates, updatedAt: new Date().toISOString() };
+    const now = new Date().toISOString();
+    // Capture per-status timestamps on first transition into that status
+    const statusTimestamps = {};
+    if (updates.status && updates.status !== item.status) {
+      if (updates.status === 'in_review'  && !item.sentForReviewAt) statusTimestamps.sentForReviewAt = now;
+      if (updates.status === 'approved'   && !item.approvedAt)      statusTimestamps.approvedAt      = now;
+      if (updates.status === 'scheduled'  && !item.scheduledAt)     statusTimestamps.scheduledAt     = now;
+      if (updates.status === 'published'  && !item.publishedAt)     statusTimestamps.publishedAt     = now;
+    }
+    const updated = { ...item, ...updates, ...statusTimestamps, updatedAt: now };
     await kv.set(`content:${id}`, updated);
     return res.json(updated);
   }
