@@ -3550,132 +3550,19 @@ async function queueCurrentForPublishing() {
   setTimeout(() => hideAlert('generateAlert'), 3000);
 }
 
-// Render the publishing queue panel items
-function renderQueuePanel() {
-  const list  = document.getElementById('queueList');
-  const empty = document.getElementById('queueEmpty');
-  const count = document.getElementById('queuePanelCount');
-  count.textContent = publishingQueue.length;
-  if (publishingQueue.length === 0) {
-    empty.style.display = '';
-    list.innerHTML = '';
-    list.appendChild(empty);
-    return;
-  }
-  empty.style.display = 'none';
-  list.innerHTML = '';
-  publishingQueue.forEach((item, idx) => {
-    const date = new Date(item.queuedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-    const catLabel = CATEGORIES.find(c => c.id === item.category)?.label || item.category;
-    const div = document.createElement('div');
-    div.className = 'queue-item';
-    div.innerHTML = `
-      <div class="queue-item-title">${escapeHtml(item.title.slice(0,70))}${item.title.length>70?'\u2026':''}</div>
-      <div class="queue-item-meta">${catLabel} &middot; ${(item.wordCount||0).toLocaleString()} words &middot; Queued ${date}${item.unsaved?' &middot; <em>unsaved</em>':''}</div>
-      <div class="queue-item-actions">
-        <button class="btn btn-outline btn-xs" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);" onclick="removeFromQueue(${idx})">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
-          Remove
-        </button>
-      </div>`;
-    list.appendChild(div);
-  });
-}
+// Queue panel removed — pipeline tab handles this now
+function renderQueuePanel() {}
+function toggleQueuePanel() {}
+function updateQueueHeaderBtn() {}
 
 async function removeFromQueue(idx) {
   const item = publishingQueue[idx];
   if (item?.id) await contentApi.remove(item.id);
   publishingQueue.splice(idx, 1);
-  renderQueuePanel();
   renderArchive();
-  updateQueueHeaderBtn();
 }
 
-function toggleQueuePanel() {
-  document.getElementById('queuePanel').classList.toggle('open');
-}
-
-function updateQueueHeaderBtn() {
-  const btn = document.getElementById('queueHeaderBtn');
-  const count = document.getElementById('queueHeaderCount');
-  count.textContent = publishingQueue.length;
-  btn.classList.toggle('has-items', publishingQueue.length > 0);
-}
-
-// Open Send For Review modal from the generator toolbar (current article)
-function openSendForReviewModal() {
-  if (!rawArticleText) return;
-  const title = extractTitleFromArticle(rawArticleText) || 'Untitled Article';
-  currentReviewForModal = { title, text: rawArticleText, id: null };
-  document.getElementById('reviewModalTitle').textContent = title.slice(0, 120);
-  document.getElementById('reviewerEmail').value = '';
-  document.getElementById('reviewerName').value = '';
-  document.getElementById('reviewMessage').value = '';
-  hideAlert('reviewModalAlert');
-  document.getElementById('reviewModal').classList.add('open');
-}
-
-// Open Send For Review modal from an archive card
-function openSendForReviewModalFromArchive(id) {
-  const item = getArchive().find(x => x.id === id);
-  if (!item) return;
-  currentReviewForModal = item;
-  document.getElementById('reviewModalTitle').textContent = item.title.slice(0, 120);
-  document.getElementById('reviewerEmail').value = '';
-  document.getElementById('reviewerName').value = '';
-  document.getElementById('reviewMessage').value = '';
-  hideAlert('reviewModalAlert');
-  document.getElementById('reviewModal').classList.add('open');
-}
-
-function closeReviewModal() {
-  document.getElementById('reviewModal').classList.remove('open');
-  currentReviewForModal = null;
-}
-
-function sendForReview() {
-  const email   = document.getElementById('reviewerEmail').value.trim();
-  const name    = document.getElementById('reviewerName').value.trim();
-  const message = document.getElementById('reviewMessage').value.trim();
-  if (!email) { showAlert('reviewModalAlert', 'Please enter a reviewer email address.', 'error'); return; }
-  if (!email.includes('@')) { showAlert('reviewModalAlert', 'Please enter a valid email address.', 'error'); return; }
-  if (!currentReviewForModal) return;
-
-  const title   = currentReviewForModal.title || 'Article';
-  const catLabel = CATEGORIES.find(c => c.id === currentCategory)?.label || 'Content';
-  const itemId  = currentReviewForModal.id || 'current';
-  const repoUrl = `https://clinicalreviewgenerator.netlify.app/`;
-
-  // Build a mailto link — the reviewer gets a link to the GitHub repo and the article title
-  const greeting = name ? `Dear ${name},\n\n` : '';
-  const customMsg = message ? `\n\n${message}\n\n` : '\n\n';
-  const body = encodeURIComponent(
-    `${greeting}You have been asked to review the following ${catLabel} article from SLA Health Content Generator:${customMsg}` +
-    `Article: ${title}\n` +
-    `Category: ${catLabel}\n` +
-    `\n--- ARTICLE CONTENT ---\n\n` +
-    (currentReviewForModal.text ? currentReviewForModal.text.slice(0, 3000) + (currentReviewForModal.text.length > 3000 ? '\n\n[Article truncated — view full version in the app]' : '') : '[Content not available]') +
-    `\n\n--- END OF ARTICLE ---\n\n` +
-    `View and manage this article in the SLA Health Content Generator:\n${repoUrl}\n\n` +
-    `This is an automated message from SLA Health Content Generator.`
-  );
-  const subject = encodeURIComponent(`[SLA Health] Review Request: ${title.slice(0, 60)}`);
-  const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-
-  // Open the mailto link without navigating away from the app
-  const a = document.createElement('a');
-  a.href = mailtoLink;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  showAlert('reviewModalAlert', `\u2713 Review email prepared for ${email}`, 'success');
-  setTimeout(() => {
-    document.getElementById('reviewModal').classList.remove('open');
-    currentReviewForModal = null;
-  }, 2000);
-}
+// (old mailto-based review modal removed — review emails now sent via /api/review/send)
 
 // ═══════════════════════════════════════════════════════════
 //  CATEGORY INPUT HANDLERS

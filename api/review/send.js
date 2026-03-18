@@ -108,17 +108,29 @@ export default async function handler(req, res) {
   if (!content) return res.status(404).json({ error: 'Content not found' });
   if (!reviewers?.length) return res.status(400).json({ error: 'No reviewers configured. Add reviewers in Settings.' });
 
-  const emailPromises = reviewers.map(async reviewer => {
+  const results = await Promise.allSettled(reviewers.map(async reviewer => {
     const [approveToken, rejectToken] = await Promise.all([
       buildApprovalToken({ contentId, reviewerId: reviewer.id, action: 'approve' }),
       buildApprovalToken({ contentId, reviewerId: reviewer.id, action: 'reject' }),
     ]);
     const approveUrl = `${APP_URL}/api/review/${approveToken}`;
     const rejectUrl  = `${APP_URL}/api/review/${rejectToken}`;
-    return getResend().emails.send(buildApprovalEmail({ reviewer, content, approveUrl, rejectUrl }));
-  });
+    const result = await getResend().emails.send(
+      buildApprovalEmail({ reviewer, content, approveUrl, rejectUrl })
+    );
+    if (result.error) throw new Error(`Resend error for ${reviewer.email}: ${result.error.message}`);
+    return { reviewer: reviewer.email, id: result.data?.id };
+  }));
 
-  await Promise.all(emailPromises);
+  const failures = results.filter(r => r.status === 'rejected').map(r => r.reason?.message);
+  const sent     = results.filter(r => r.status === 'fulfilled').length;
+
+  if (sent === 0) {
+    return res.status(500).json({
+      error: `All emails failed to send. First error: ${failures[0] ?? 'unknown'}`,
+      details: failures,
+    });
+  }
 
   const updated = {
     ...content,
@@ -131,5 +143,10 @@ export default async function handler(req, res) {
   };
   await kv.set(`content:${contentId}`, updated);
 
-  return res.json({ sent: reviewers.length, status: 'in_review' });
+  return res.json({
+    sent,
+    failed: failures.length,
+    status: 'in_review',
+    ...(failures.length && { warnings: failures }),
+  });
 }

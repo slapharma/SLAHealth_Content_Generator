@@ -8,11 +8,12 @@ export function buildContentItem(data) {
   return {
     id: randomUUID(),
     title: data.title,
-    body: data.body,
+    body: data.body ?? '',
     excerpt: data.excerpt ?? '',
     category: data.category ?? 'uncategorised',
     template: data.template ?? 'standard',
     status: 'draft',
+    sourceId: data.sourceId ?? null,   // links back to archive item id
     createdAt: now,
     updatedAt: now,
     reviewers: [],
@@ -27,7 +28,7 @@ export function buildContentItem(data) {
 
 export function validateContentItem(data) {
   if (!data.title) throw new Error('title is required');
-  if (!data.body) throw new Error('body is required');
+  // body is optional — allow empty articles (title-only drafts)
 }
 
 // ── HTTP handler ─────────────────────────────────────────────────────────────
