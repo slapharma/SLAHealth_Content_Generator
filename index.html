@@ -50,14 +50,14 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 58px;
+  height: 80px;
   position: sticky;
   top: 0;
   z-index: 200;
   gap: 1rem;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
-.brand-logo { height: 34px; width: auto; background: #fff; border-radius: 5px; padding: 3px 6px; }
+.brand-logo { height: 68px; width: auto; background: #fff; border-radius: 5px; padding: 3px 6px; }
 .brand-name { color: #fff; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.5px; line-height: 1.1; }
 .brand-name span { color: var(--sla-orange); }
 .brand-sub { color: rgba(255,255,255,0.55); font-size: 0.6rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
@@ -960,10 +960,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         Storage <span id="archiveTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
       </button>
-      <button class="header-tab" onclick="switchTab('comparison')" id="tab-comparison">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        Compare
-      </button>
       <button class="header-tab" onclick="switchTab('reports')" id="tab-reports">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         Reports <span id="reportsTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
@@ -977,11 +973,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         Settings
       </button>
     </div>
-    <button class="queue-btn-header" id="queueHeaderBtn" onclick="toggleQueuePanel()" title="Publishing Queue">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Publishing Queue
-      <span class="queue-header-count" id="queueHeaderCount">0</span>
-    </button>
     <div id="syncStatus" onclick="ghLoadAll()" title="Click to refresh from GitHub">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       <span id="syncText">Loading…</span>
@@ -1293,17 +1284,9 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Copy
       </button>
-      <button class="btn btn-navy btn-xs" onclick="downloadWord()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Word
-      </button>
       <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="downloadPDF()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         PDF
-      </button>
-      <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="openSendForReviewModal()" id="sendForReviewBtn" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Send For Review
       </button>
       <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="queueCurrentForPublishing()" id="queueForPublishBtn" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -1343,7 +1326,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         </h3>
         <div class="hero-image-tabs">
           <button class="hero-img-tab-btn active" onclick="switchHeroTab('ai')" id="heroTabAI">AI Generate</button>
-          <button class="hero-img-tab-btn" onclick="switchHeroTab('unsplash')" id="heroTabUnsplash">Unsplash</button>
+          <button class="hero-img-tab-btn" onclick="switchHeroTab('unsplash')" id="heroTabUnsplash">Pexels</button>
         </div>
       </div>
       <div class="hero-image-body">
@@ -1370,8 +1353,8 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <!-- Unsplash pane -->
         <div class="hero-img-pane" id="heroPane-unsplash">
           <div class="unsplash-search-row">
-            <input type="text" id="unsplashQuery" placeholder="Search Unsplash (e.g. healthcare, clinical trial, doctor)" />
-            <button class="btn btn-navy btn-sm" onclick="searchUnsplash()">Search</button>
+            <input type="text" id="unsplashQuery" placeholder="Search Pexels (e.g. healthcare, clinical trial, doctor)" />
+            <button class="btn btn-navy btn-sm" onclick="searchPexels()">Search</button>
           </div>
           <div id="unsplashStatus" class="alert hidden" style="margin-bottom:8px;"></div>
           <div class="unsplash-grid" id="unsplashGrid"></div>
@@ -1694,55 +1677,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 </div><!-- /app-layout -->
 
 <!-- PUBLISHING QUEUE PANEL (slide-in from right) -->
-<div class="queue-panel" id="queuePanel">
-  <div class="queue-panel-header">
-    <div class="queue-panel-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Publishing Queue
-      <span class="queue-count-badge" id="queuePanelCount">0</span>
-    </div>
-    <button class="queue-close-btn" onclick="toggleQueuePanel()">&#x2715; Close</button>
-  </div>
-  <div class="queue-list" id="queueList">
-    <div class="queue-empty" id="queueEmpty">No items queued for publishing yet.<br><br>Approve an item in Storage and click <strong>Queue For Publishing</strong>.</div>
-  </div>
-</div>
 
-<!-- SEND FOR REVIEW MODAL -->
-<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Send For Review
-      </h3>
-      <button class="modal-close" onclick="closeReviewModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-article-title" id="reviewModalTitle"></div>
-      <div class="form-group">
-        <label>Reviewer Email Address</label>
-        <input type="text" id="reviewerEmail" placeholder="reviewer@example.com" />
-      </div>
-      <div class="form-group">
-        <label>Reviewer Name (optional)</label>
-        <input type="text" id="reviewerName" placeholder="Dr. Smith" />
-      </div>
-      <div class="form-group">
-        <label>Message (optional)</label>
-        <textarea id="reviewMessage" rows="3" placeholder="Please review this article and provide feedback..."></textarea>
-      </div>
-      <div id="reviewModalAlert" class="alert hidden"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline btn-sm" onclick="closeReviewModal()">Cancel</button>
-      <button class="btn btn-orange btn-sm" onclick="sendForReview()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Send Review Link
-      </button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -1782,8 +1717,8 @@ const INFOGRAPHIC_MODELS = [
   'deepseek/deepseek-r1-0528:free'
 ];
 
-// Unsplash API (public demo key — replace with your own for production)
-const UNSPLASH_ACCESS_KEY = 'client_id=_placeholder_';
+// Pexels API key
+const PEXELS_API_KEY = '61644jNcCg5JfspIckM3rGG4lDwaNuUVmbIXCjbxYZDeqGiaNBftxKdJ';
 
 const GH_API    = 'https://api.github.com';
 const GH_REPO   = 'slapharma/SLAHealth_Content_Generator';
@@ -2710,11 +2645,7 @@ function renderArchive() {
         <button class="btn btn-orange btn-xs" onclick="loadArchiveItem('${r.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="5 12 12 5 19 12"/><line x1="12" y1="5" x2="12" y2="19"/></svg>Load
         </button>
-        <button class="btn btn-outline btn-xs" onclick="downloadArchiveWord('${r.id}')">Word</button>
         <button class="btn btn-outline btn-xs" onclick="downloadArchivePDF('${r.id}')">PDF</button>
-        <button class="btn btn-outline btn-xs" style="color:var(--sla-orange);border-color:rgba(244,121,32,0.4);" onclick="openSendForReviewModalFromArchive('${r.id}')" title="Send for review">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
         <button class="btn btn-outline btn-xs" style="${isQueued ? 'color:var(--sla-orange);border-color:rgba(244,121,32,0.5);' : ''}" onclick="toggleQueueItem('${r.id}')" title="${isQueued ? 'Remove from queue' : 'Queue for publishing'}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </button>
@@ -3684,39 +3615,40 @@ async function generateHeroImage() {
   btn.disabled = false;
 }
 
-async function searchUnsplash() {
+async function searchPexels() {
   const query = document.getElementById('unsplashQuery').value.trim();
   if (!query) return;
   const statusEl = document.getElementById('unsplashStatus');
   const grid = document.getElementById('unsplashGrid');
-  statusEl.className = 'alert'; statusEl.textContent = 'Searching Unsplash...';
+  statusEl.className = 'alert'; statusEl.textContent = 'Searching Pexels...';
   grid.innerHTML = '';
   selectedUnsplashIdx = -1;
   document.getElementById('unsplashUseBtn').style.display = 'none';
   document.getElementById('unsplashCredit').textContent = '';
 
   try {
-    // Generate 6 keyword-based images via Pollinations.ai (free, no API key needed)
-    statusEl.className = 'alert'; statusEl.textContent = 'Generating images…';
-    const variants = [
-      `${query}, professional medical photography, clinic`,
-      `${query}, healthcare professional, clean modern`,
-      `${query}, pharmaceutical research laboratory`,
-      `${query}, doctor patient consultation, bright`,
-      `${query}, medical science, high resolution`,
-      `${query}, hospital clinical setting, wide angle`
-    ];
-    unsplashResults = variants.map((prompt, i) => {
-      const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt.substring(0,150))}?width=400&height=250&model=flux&seed=${i * 137}`;
-      return { urls: { small: url, full: url.replace('width=400&height=250', 'width=1200&height=400') }, user: { name: 'Pollinations AI' } };
+    const resp = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=9&orientation=landscape`, {
+      headers: { Authorization: PEXELS_API_KEY }
     });
+    if (!resp.ok) throw new Error(`Pexels API error ${resp.status}`);
+    const data = await resp.json();
+    if (!data.photos || data.photos.length === 0) {
+      statusEl.className = 'alert alert-error';
+      statusEl.textContent = 'No photos found. Try different keywords.';
+      return;
+    }
+    unsplashResults = data.photos.map(p => ({
+      urls: { small: p.src.medium, full: p.src.large2x },
+      user: { name: p.photographer },
+      link: p.url
+    }));
     statusEl.className = 'alert hidden';
     grid.innerHTML = unsplashResults.map((img, i) => `
       <img src="${img.urls.small}" class="unsplash-thumb" alt="${query}" onclick="selectUnsplashImage(${i})" loading="lazy" onerror="this.style.opacity='0.3'" />
     `).join('');
-    document.getElementById('unsplashCredit').textContent = 'AI-generated images via Pollinations.ai. Click to select.';
+    document.getElementById('unsplashCredit').textContent = `${data.photos.length} photos found on Pexels. Click to select.`;
   } catch (e) {
-    statusEl.className = 'alert alert-error'; statusEl.textContent = 'Image search failed. Please try again.';
+    statusEl.className = 'alert alert-error'; statusEl.textContent = `Search failed: ${e.message}`;
   }
 }
 
@@ -3725,7 +3657,7 @@ function selectUnsplashImage(idx) {
   document.querySelectorAll('.unsplash-thumb').forEach((t, i) => t.classList.toggle('selected', i === idx));
   document.getElementById('unsplashUseBtn').style.display = 'inline-flex';
   const img = unsplashResults[idx];
-  const credit = img.user?.name ? `Photo by ${img.user.name} on Unsplash` : 'Photo from Unsplash';
+  const credit = img.user?.name ? `Photo by ${img.user.name} on Pexels` : 'Photo from Pexels';
   document.getElementById('unsplashCredit').textContent = credit;
 }
 
@@ -3737,7 +3669,7 @@ function useSelectedUnsplashImage() {
   selectedImg.src = fullUrl;
   selectedImg.style.display = 'block';
   heroImageUrl = fullUrl;
-  heroImageType = 'unsplash';
+  heroImageType = 'pexels';
   document.getElementById('unsplashDownloadBtn').style.display = 'inline-flex';
 }
 
