@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cat_1773991789304",
+    "name": "hello test",
+    "description": "Structured, objective summaries of published clinical trials for physician audiences",
+    "sources": [
+      "single",
+      "multiple",
+      "links",
+      "paste"
+    ],
+    "wpCategorySlug": "",
+    "prompt": "",
+    "llm": "",
+    "icon": "📄",
+    "createdAt": "2026-03-20T07:29:49.305Z"
+  }
+]
