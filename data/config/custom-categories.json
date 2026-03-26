@@ -1,16 +1,1 @@
-[
-  {
-    "id": "cat_1774432080661",
-    "name": "hello test",
-    "description": "vgfg",
-    "sources": [
-      "multiple",
-      "paste"
-    ],
-    "wpCategorySlug": "",
-    "prompt": "",
-    "llm": "",
-    "icon": "📄",
-    "createdAt": "2026-03-25T09:48:00.661Z"
-  }
-]
+[]
